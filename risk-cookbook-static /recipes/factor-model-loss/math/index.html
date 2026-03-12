@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Factor Model Loss — Math — The Risk Cookbook</title>
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]'], ['$$', '$$']] },
+      svg: { fontCache: 'global' }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="site-shell">
+  <header class="navbar"><div class="nav-inner"><a class="brand" href="../../../index.html">The Risk Cookbook</a><nav class="nav-links"><a href="../../../index.html">Home</a><a href="../../index.html">Recipes</a><a href="../../../articles/index.html">Articles</a><a href="../../../resources/index.html">Resources</a></nav></div></header>
+  <main class="main"><div class="container math-page">
+    <section class="hero">
+      <div class="breadcrumb"><a href="../../index.html">Recipes</a> / <a href="../index.html">Factor Model Loss</a> / Math</div>
+      <div class="eyebrow">Recipe 04 - Math</div>
+      <h1>Factor Model Loss</h1>
+      <p>The mathematics behind the factor model loss recipe.</p>
+      <div class="math-links"><a class="button secondary" href="../index.html">Back to recipe</a></div>
+    </section>
+    
+<section class="section prose">
+  <h2>Model setup</h2>
+  <p>The factor model assumes that each asset return can be decomposed into a common-factor piece and an idiosyncratic residual:</p>
+  <div class="equation-block">\[
+    R = Bf + \varepsilon
+  \]</div>
+  <p>Here \(B\) is the exposure matrix, \(f\) is the vector of factor returns, and \(\varepsilon\) is the vector of asset-specific shocks.</p>
+</section>
+<section class="section prose">
+  <h2>Factor covariance structure</h2>
+  <p>The page assumes Gaussian factor shocks with</p>
+  <div class="equation-block">\[
+    f \sim \mathcal{N}(\mu_f, \Sigma_f)
+  \]</div>
+  <p>and diagonal specific risk</p>
+  <div class="equation-block">\[
+    \varepsilon \sim \mathcal{N}(0, D)
+  \]</div>
+  <p>where \(D\) is diagonal. This implies the asset covariance matrix</p>
+  <div class="equation-block">\[
+    \Sigma_R = B\Sigma_f B^\top + D
+  \]</div>
+</section>
+<section class="section prose">
+  <h2>From factors to portfolio loss</h2>
+  <p>If the portfolio has weights \(w\), then the portfolio loss is</p>
+  <div class="equation-block">\[
+    L = -w^\top R = -w^\top Bf - w^\top \varepsilon
+  \]</div>
+  <p>This expression makes the decomposition transparent: one term comes from systematic factor moves, and one term comes from specific shocks.</p>
+</section>
+<section class="section prose">
+  <h2>Risk decomposition</h2>
+  <p>The page computes the total portfolio variance</p>
+  <div class="equation-block">\[
+    \mathrm{Var}(L) = w^\top (B\Sigma_f B^\top + D) w
+  \]</div>
+  <p>and splits it into</p>
+  <div class="equation-block">\[
+    \mathrm{Systematic\ risk} = w^\top B\Sigma_f B^\top w
+  \]</div>
+  <div class="equation-block">\[
+    \mathrm{Specific\ risk} = w^\top D w
+  \]</div>
+  <p>This is the mathematical reason the main page can show factor contribution charts and systematic-vs-specific shares.</p>
+</section>
+<section class="section prose">
+  <h2>What the simulation is doing</h2>
+  <p>The simulation draws factor returns \(f^{(m)}\), draws specific shocks \(\varepsilon^{(m)}\), builds asset returns \(R^{(m)}\), and then converts those draws into portfolio losses \(L^{(m)}\). The path panel compounds repeated factor shocks through time so the user can see how common-factor exposure shapes portfolio outcomes.</p>
+  <div class="note-box">This page changes the geometry of the model. Instead of specifying risk directly in asset space, it builds risk through a lower-dimensional factor structure.</div>
+</section>
+
+  </div></main>
+  <footer class="footer"><div class="footer-inner"><div>The Risk Cookbook</div><div class="footer-links"><a href="../index.html">Back to recipe</a><a href="../../index.html">All recipes</a></div></div></footer>
+</div>
+</body>
+</html>

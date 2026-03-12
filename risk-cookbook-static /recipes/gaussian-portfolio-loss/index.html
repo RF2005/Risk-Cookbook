@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gaussian Portfolio Loss — The Risk Cookbook</title>
+  <link rel="stylesheet" href="../../assets/styles.css" />
+</head>
+<body>
+<div class="site-shell">
+  <header class="navbar"><div class="nav-inner"><a class="brand" href="../../index.html">The Risk Cookbook</a><nav class="nav-links"><a href="../../index.html">Home</a><a href="../index.html">Recipes</a><a href="../../articles/index.html">Articles</a><a href="../../resources/index.html">Resources</a></nav></div></header>
+  <main class="main"><div class="container">
+    <section class="hero"><div class="eyebrow">Recipe 01</div><h1>Gaussian Portfolio Loss</h1><p>A baseline model for portfolio loss built from weights, means, volatilities, and correlation.</p><div class="hero-actions"><a class="button secondary" href="math/index.html">Math behind this recipe</a></div></section>
+    <div class="recipe-layout">
+      <aside class="panel"><h3>Inputs</h3><div class="stack">
+        <div class="field"><label class="label" for="assetCount">Number of assets</label><input class="input" id="assetCount" placeholder="3" /></div>
+        <div class="field"><label class="label" for="weights">Weights</label><textarea class="textarea" id="weights" placeholder="0.4, 0.3, 0.3"></textarea><div class="hint">Enter one value per asset.</div></div>
+        <div class="field"><label class="label" for="means">Mean returns</label><textarea class="textarea" id="means" placeholder="0.0002, 0.0001, 0.0003"></textarea><div class="hint">Use horizon-level returns.</div></div>
+        <div class="field"><label class="label" for="vols">Volatilities</label><textarea class="textarea" id="vols" placeholder="0.01, 0.015, 0.012"></textarea><div class="hint">Use horizon-level standard deviations.</div></div>
+        <div class="inline"><div class="field"><label class="label" for="corr">Common correlation</label><input class="input" id="corr" placeholder="0.30" /></div><div class="field"><label class="label" for="alpha">Confidence level</label><input class="input" id="alpha" placeholder="0.95" /></div></div>
+        <div class="field"><label class="label" for="simulations">Simulations</label><input class="input" id="simulations" placeholder="10000" /></div>
+        <div id="gaussian-errors"></div>
+        <div class="actions"><button id="gaussian-run" disabled>Run model</button><button id="gaussian-clear" class="secondary">Clear</button></div>
+      </div></aside>
+      <div>
+        <section class="section"><h2>Intuition</h2><p>Start with a vector of asset returns, assume the returns are jointly Gaussian, then map those returns into a portfolio loss with a weight vector.</p></section>
+        <section class="section"><h2>General recipe</h2><ol><li>Choose the number of assets and the portfolio weights.</li><li>Enter mean returns, volatilities, and a common correlation.</li><li>Build a covariance matrix from the volatilities and correlation.</li><li>Simulate returns and convert them into portfolio losses.</li><li>Compute mean loss, loss volatility, VaR, and expected shortfall.</li></ol></section>
+        <section class="section"><h2>Python implementation</h2><div class="code-shell"><pre id="gaussian-python"></pre></div></section>
+        <section class="section"><h2>Results and simulation</h2><div id="gaussian-results" class="stack"></div><div class="plot-grid"><div id="gaussian-histogram"></div><div id="gaussian-paths"></div><div id="gaussian-sensitivity"></div></div></section>
+        <section class="section"><h2>Notes</h2><p>This first page stays intentionally simple by using a single common-correlation input instead of a full correlation matrix. It is the baseline recipe the other pages will modify.</p></section>
+      </div>
+    </div>
+  </div></main>
+  <footer class="footer"><div class="footer-inner"><div>The Risk Cookbook</div><div class="footer-links"><a href="../student-t-portfolio-loss/index.html">Next: Student-t</a></div></div></footer>
+</div>
+<script type="module">
+  import { setupGaussianPage } from '../../assets/gaussian.js'
+  setupGaussianPage()
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student-t Portfolio Loss — Math — The Risk Cookbook</title>
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]'], ['$$', '$$']] },
+      svg: { fontCache: 'global' }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="site-shell">
+  <header class="navbar"><div class="nav-inner"><a class="brand" href="../../../index.html">The Risk Cookbook</a><nav class="nav-links"><a href="../../../index.html">Home</a><a href="../../index.html">Recipes</a><a href="../../../articles/index.html">Articles</a><a href="../../../resources/index.html">Resources</a></nav></div></header>
+  <main class="main"><div class="container math-page">
+    <section class="hero">
+      <div class="breadcrumb"><a href="../../index.html">Recipes</a> / <a href="../index.html">Student-t Portfolio Loss</a> / Math</div>
+      <div class="eyebrow">Recipe 02 - Math</div>
+      <h1>Student-t Portfolio Loss</h1>
+      <p>The mathematics behind the Student-t portfolio loss recipe.</p>
+      <div class="math-links"><a class="button secondary" href="../index.html">Back to recipe</a></div>
+    </section>
+    
+<section class="section prose">
+  <h2>Model setup</h2>
+  <p>This page keeps the same loss map as the Gaussian recipe but changes the return law to a heavy-tailed Student-t model:</p>
+  <div class="equation-block">\[
+    R \sim t_\nu(\mu, \Sigma)
+  \]</div>
+  <p>Here \(\nu\) is the degrees-of-freedom parameter. Lower values of \(\nu\) create fatter tails. As \(\nu \to \infty\), the Student-t distribution approaches a Gaussian law.</p>
+</section>
+<section class="section prose">
+  <h2>From returns to loss</h2>
+  <p>Just as before, the page defines loss as</p>
+  <div class="equation-block">\[
+    L = -w^\top R
+  \]</div>
+  <p>The main conceptual point is that the <em>mapping</em> from returns to loss does not change. Only the tail behavior of the returns changes.</p>
+</section>
+<section class="section prose">
+  <h2>Why the tails are heavier</h2>
+  <p>A multivariate Student-t variable can be written as a Gaussian scale mixture:</p>
+  <div class="equation-block">\[
+    R = \mu + \frac{AZ}{\sqrt{U/\nu}}
+  \]</div>
+  <p>where \(Z \sim \mathcal{N}(0, I)\), \(U \sim \chi^2_\nu\), and \(AA^\top = \Sigma\). The random denominator makes some draws much larger in magnitude than the Gaussian case, which is exactly why the tail metrics increase.</p>
+</section>
+<section class="section prose">
+  <h2>Loss distribution and tail metrics</h2>
+  <p>Because \(L\) is still a linear combination of the return vector, its distribution is also Student-t with the same degrees of freedom and an induced scale based on \(w\) and \(\Sigma\):</p>
+  <div class="equation-block">\[
+    L \sim t_\nu\bigl(-w^\top \mu,\; w^\top \Sigma w\bigr)
+  \]</div>
+  <p>The page estimates</p>
+  <div class="equation-block">\[
+    \mathrm{VaR}_{\alpha}(L), \qquad \mathrm{ES}_{\alpha}(L)
+  \]</div>
+  <p>by Monte Carlo simulation rather than closed form, then compares those values with a Gaussian benchmark using the same mean and covariance inputs.</p>
+</section>
+<section class="section prose">
+  <h2>What the simulation is doing</h2>
+  <p>The main recipe generates many Student-t return vectors, converts them into losses, and uses those simulated losses to approximate the tail of \(L\). The path panel compounds a sequence of Student-t shocks to show how rare but severe drawdowns become more likely than under the Gaussian model.</p>
+  <div class="note-box">This page is useful because it isolates one question: what changes if the portfolio has the same broad covariance structure, but the shocks are heavy-tailed instead of Gaussian?</div>
+</section>
+
+  </div></main>
+  <footer class="footer"><div class="footer-inner"><div>The Risk Cookbook</div><div class="footer-links"><a href="../index.html">Back to recipe</a><a href="../../index.html">All recipes</a></div></div></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gaussian Portfolio Loss — Math — The Risk Cookbook</title>
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]'], ['$$', '$$']] },
+      svg: { fontCache: 'global' }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="site-shell">
+  <header class="navbar"><div class="nav-inner"><a class="brand" href="../../../index.html">The Risk Cookbook</a><nav class="nav-links"><a href="../../../index.html">Home</a><a href="../../index.html">Recipes</a><a href="../../../articles/index.html">Articles</a><a href="../../../resources/index.html">Resources</a></nav></div></header>
+  <main class="main"><div class="container math-page">
+    <section class="hero">
+      <div class="breadcrumb"><a href="../../index.html">Recipes</a> / <a href="../index.html">Gaussian Portfolio Loss</a> / Math</div>
+      <div class="eyebrow">Recipe 01 - Math</div>
+      <h1>Gaussian Portfolio Loss</h1>
+      <p>The mathematics behind the Gaussian portfolio loss recipe.</p>
+      <div class="math-links"><a class="button secondary" href="../index.html">Back to recipe</a></div>
+    </section>
+    
+<section class="section prose">
+  <h2>Model setup</h2>
+  <p>The recipe starts with a return vector \(R \in \mathbb{R}^n\) over one horizon and assumes</p>
+  <div class="equation-block">\[
+    R \sim \mathcal{N}(\mu, \Sigma)
+  \]</div>
+  <p>where \(\mu\) is the mean return vector and \(\Sigma\) is the covariance matrix. In the current page, \(\Sigma\) is built from user-entered volatilities and one common correlation \(\rho\).</p>
+  <div class="equation-block">\[
+    \Sigma_{ij} = \sigma_i \sigma_j \rho_{ij}, \qquad
+    \rho_{ij} =
+    \begin{cases}
+      1 & i=j \\
+      \rho & i \ne j
+    \end{cases}
+  \]</div>
+</section>
+<section class="section prose">
+  <h2>From returns to portfolio loss</h2>
+  <p>If \(w\) is the vector of portfolio weights, then portfolio return is \(w^\top R\). The page works with <em>loss</em>, so it flips the sign:</p>
+  <div class="equation-block">\[
+    L = -w^\top R
+  \]</div>
+  <p>This makes larger values of \(L\) correspond to worse portfolio outcomes.</p>
+</section>
+<section class="section prose">
+  <h2>Why the loss is Gaussian</h2>
+  <p>A linear combination of jointly Gaussian random variables is still Gaussian. Since \(L\) is a linear map of \(R\), its distribution is</p>
+  <div class="equation-block">\[
+    L \sim \mathcal{N}\left(-w^\top \mu,\; w^\top \Sigma w\right)
+  \]</div>
+  <p>So the page is really computing two objects:</p>
+  <div class="equation-block">\[
+    \mathbb{E}[L] = -w^\top \mu, \qquad
+    \mathrm{Var}(L) = w^\top \Sigma w
+  \]</div>
+</section>
+<section class="section prose">
+  <h2>Tail metrics</h2>
+  <p>For a confidence level \(\alpha\), the page reports Value at Risk and Expected Shortfall.</p>
+  <div class="equation-block">\[
+    \mathrm{VaR}_{\alpha}(L) = F_L^{-1}(\alpha)
+  \]</div>
+  <div class="equation-block">\[
+    \mathrm{ES}_{\alpha}(L) = \mathbb{E}[L \mid L \ge \mathrm{VaR}_{\alpha}(L)]
+  \]</div>
+  <p>Because \(L\) is Gaussian, there are closed-form expressions in terms of the standard normal quantile \(z_\alpha\):</p>
+  <div class="equation-block">\[
+    \mathrm{VaR}_{\alpha}(L) = -w^\top \mu + \sqrt{w^\top \Sigma w}\; z_\alpha
+  \]</div>
+  <div class="equation-block">\[
+    \mathrm{ES}_{\alpha}(L) = -w^\top \mu + \sqrt{w^\top \Sigma w}\; \frac{\varphi(z_\alpha)}{1-\alpha}
+  \]</div>
+  <p>where \(\varphi\) is the standard normal density.</p>
+</section>
+<section class="section prose">
+  <h2>What the simulation is doing</h2>
+  <p>The simulation on the main recipe page generates many independent draws \(R^{(1)}, \dots, R^{(M)}\) from \(\mathcal{N}(\mu, \Sigma)\). Each draw is converted to a loss:</p>
+  <div class="equation-block">\[
+    L^{(m)} = -w^\top R^{(m)}
+  \]</div>
+  <p>The histogram is therefore a Monte Carlo approximation of the Gaussian loss distribution. The path panel uses repeated Gaussian draws over several steps to show how portfolio value can evolve through time under the same one-step assumption.</p>
+  <div class="note-box">This page is the baseline recipe. The later pages change the return law, the data source, or the covariance structure, but they still map everything back into the same core object: portfolio loss.</div>
+</section>
+
+  </div></main>
+  <footer class="footer"><div class="footer-inner"><div>The Risk Cookbook</div><div class="footer-links"><a href="../index.html">Back to recipe</a><a href="../../index.html">All recipes</a></div></div></footer>
+</div>
+</body>
+</html>

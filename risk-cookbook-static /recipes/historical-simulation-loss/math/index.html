@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Historical Simulation Loss — Math — The Risk Cookbook</title>
+  <link rel="stylesheet" href="../../../assets/styles.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]'], ['$$', '$$']] },
+      svg: { fontCache: 'global' }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="site-shell">
+  <header class="navbar"><div class="nav-inner"><a class="brand" href="../../../index.html">The Risk Cookbook</a><nav class="nav-links"><a href="../../../index.html">Home</a><a href="../../index.html">Recipes</a><a href="../../../articles/index.html">Articles</a><a href="../../../resources/index.html">Resources</a></nav></div></header>
+  <main class="main"><div class="container math-page">
+    <section class="hero">
+      <div class="breadcrumb"><a href="../../index.html">Recipes</a> / <a href="../index.html">Historical Simulation Loss</a> / Math</div>
+      <div class="eyebrow">Recipe 03 - Math</div>
+      <h1>Historical Simulation Loss</h1>
+      <p>The mathematics behind the historical simulation loss recipe.</p>
+      <div class="math-links"><a class="button secondary" href="../index.html">Back to recipe</a></div>
+    </section>
+    
+<section class="section prose">
+  <h2>Model setup</h2>
+  <p>Historical simulation does not start with a parametric distribution like \(\mathcal{N}(\mu, \Sigma)\) or \(t_\nu(\mu, \Sigma)\). Instead, it takes a matrix of observed return scenarios</p>
+  <div class="equation-block">\[
+    R_1, R_2, \dots, R_T \in \mathbb{R}^n
+  \]</div>
+  <p>and treats those scenarios as the empirical loss distribution for the current portfolio.</p>
+</section>
+<section class="section prose">
+  <h2>From return history to loss history</h2>
+  <p>For each historical return vector, the page computes the corresponding portfolio loss:</p>
+  <div class="equation-block">\[
+    L_t = -w^\top R_t, \qquad t = 1, \dots, T
+  \]</div>
+  <p>The collection \(L_1, \dots, L_T\) is the empirical loss sample.</p>
+</section>
+<section class="section prose">
+  <h2>Empirical VaR and Expected Shortfall</h2>
+  <p>Once the loss sample is built, the page sorts it and reads off the \(\alpha\)-quantile:</p>
+  <div class="equation-block">\[
+    \widehat{\mathrm{VaR}}_{\alpha}(L) = \text{empirical quantile of } \{L_t\}_{t=1}^T
+  \]</div>
+  <p>The empirical expected shortfall is the average of all losses beyond that threshold:</p>
+  <div class="equation-block">\[
+    \widehat{\mathrm{ES}}_{\alpha}(L) = \frac{1}{N_\alpha} \sum_{t: L_t \ge \widehat{\mathrm{VaR}}_{\alpha}(L)} L_t
+  \]</div>
+  <p>where \(N_\alpha\) is the number of losses in the tail.</p>
+</section>
+<section class="section prose">
+  <h2>What the lookback window means</h2>
+  <p>If the page uses only the most recent \(m\) observations, then the empirical distribution changes to</p>
+  <div class="equation-block">\[
+    \{L_{T-m+1}, \dots, L_T\}
+  \]</div>
+  <p>This is why the lookback sensitivity chart matters: historical simulation is entirely dependent on which past scenarios are included.</p>
+</section>
+<section class="section prose">
+  <h2>What the simulation is doing</h2>
+  <p>Strictly speaking, this page is more of a <em>historical scenario replay</em> than a simulation. The histogram is empirical, the worst-scenarios table identifies the largest realized losses, and the cumulative path view compounds the user-provided return history into a portfolio value series.</p>
+  <div class="note-box">The strength of historical simulation is that it is intuitive and model-light. Its weakness is that it cannot produce scenarios that never occurred in the input sample.</div>
+</section>
+
+  </div></main>
+  <footer class="footer"><div class="footer-inner"><div>The Risk Cookbook</div><div class="footer-links"><a href="../index.html">Back to recipe</a><a href="../../index.html">All recipes</a></div></div></footer>
+</div>
+</body>
+</html>
